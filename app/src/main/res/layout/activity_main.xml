@@ -6,50 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/pokemonImage"
-        android:layout_width="157dp"
-        android:layout_height="157dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.158"
-        app:srcCompat="@android:drawable/alert_dark_frame" />
-
-    <Button
-        android:id="@+id/pokemonButton"
-        android:layout_width="136dp"
-        android:layout_height="66dp"
-        android:text="@string/pokemonButtonText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
-
-    <TextView
-        android:id="@+id/pokemonName"
-        android:layout_width="145dp"
-        android:layout_height="29dp"
-        android:text="@string/pokemonNameString"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:maxLines="1" />
-
-    <TextView
-        android:id="@+id/pokemonWeight"
-        android:layout_width="145dp"
-        android:layout_height="29dp"
-        android:maxLines="1"
-        android:text="@string/pokemonWeightString"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.572" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pokedexRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

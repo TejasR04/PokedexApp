@@ -3,4 +3,6 @@
     <string name="pokemonButtonText">RANDOM</string>
     <string name="pokemonNameString"></string>
     <string name="pokemonWeightString" />
+    <string name="pokemon_name_string">Name</string>
+    <string name="pokemon_weight_string">Weight</string>
 </resources>
