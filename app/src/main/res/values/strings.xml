@@ -5,4 +5,5 @@
     <string name="pokemonWeightString" />
     <string name="pokemon_name_string">Name</string>
     <string name="pokemon_weight_string">Weight</string>
+    <string name="titleString">Pokedex App</string>
 </resources>
