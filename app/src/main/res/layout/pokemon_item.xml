@@ -9,36 +9,50 @@
         android:id="@+id/pokemon_image"
         android:layout_width="197dp"
         android:layout_height="138dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/pokemon_name"
-        android:layout_width="178dp"
-        android:layout_height="16dp"
-        android:textAppearance="@style/TextAppearance.Slide"
+        android:layout_width="197dp"
+        android:layout_height="19dp"
         android:text="@string/pokemon_name_string"
+        android:textAppearance="@style/TextAppearance.Slide"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintHorizontal_bias="0.943"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintVertical_bias="0.134" />
 
     <TextView
-        android:id="@+id/pokemon_weight"
-        android:layout_width="111dp"
-        android:layout_height="18dp"
+        android:id="@+id/pokedex_number"
+        android:layout_width="162dp"
+        android:layout_height="16dp"
         android:fontFamily="@font/press_start_2p"
-        android:text="@string/pokemon_weight_string"
+        android:text="@string/pokedex_number_string"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.71"
+        app:layout_constraintHorizontal_bias="0.807"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.408" />
+        app:layout_constraintVertical_bias="0.352" />
+
+    <TextView
+        android:id="@+id/pokemon_type"
+        android:layout_width="200dp"
+        android:layout_height="16dp"
+        android:fontFamily="@font/press_start_2p"
+        android:text="@string/type_string"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.957"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.59" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

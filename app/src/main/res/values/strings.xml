@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">PokedexApp</string>
-    <string name="pokemonButtonText">RANDOM</string>
-    <string name="pokemonNameString"></string>
-    <string name="pokemonWeightString" />
+    <string name="app_name_string">PokedexApp</string>
     <string name="pokemon_name_string">Name</string>
-    <string name="pokemon_weight_string">Weight</string>
-    <string name="titleString">Pokedex App</string>
+    <string name="pokedex_number_string">Number</string>
+    <string name="title_string">Pokedex App</string>
+    <string name="type_string">Type</string>
+    <string name="species_string">Species</string>
 </resources>
