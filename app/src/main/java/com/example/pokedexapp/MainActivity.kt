@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
                 imageList = images
                 typeList = types
                 pokemonAdapter.updateData(urlList, nameList, imageList, typeList)
+                // THIINK ABOUT TEMPORARY ARRAYS SO THAT THE RECYCLERVIEW DOESNT HAVE TO UPDATE DATA THATS ALREADY BEEN MADE
             }
             override fun onFailure(error: String) {
             }
@@ -81,7 +82,11 @@ class MainActivity : AppCompatActivity() {
         imageList.add("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i+1}.png")
         client[urlInput, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JsonHttpResponseHandler.JSON) {
-                nameList.add(json.jsonObject.getString("name").replaceFirstChar{it.uppercase()})
+                var name = json.jsonObject.getString("name").replaceFirstChar{it.uppercase()}
+                if (name.contains("-")) {
+                    name = name.substring(0, name.indexOf("-"))
+                }
+                nameList.add(name)
                 val pokeJson = json.jsonObject
                 typeList.add(pokeJson.getJSONArray("types").getJSONObject(0).getJSONObject("type").getString("name"))
                 if (pokeJson.getJSONArray("types").length() > 1) {

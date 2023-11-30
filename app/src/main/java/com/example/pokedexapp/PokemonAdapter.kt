@@ -1,5 +1,6 @@
 package com.example.pokedexapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class PokemonAdapter (private var urlList : List<String>, private var nameList: List<String>, private var imageList: List<String>, private var typeList: List<String>): RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,9 +31,10 @@ class PokemonAdapter (private var urlList : List<String>, private var nameList: 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("image issues", imageList[position])
         Glide.with(holder.itemView)
             .load(imageList[position])
-            .fitCenter()
+            .diskCacheStrategy(DiskCacheStrategy.NONE)  // Don't use disk caching
             .into(holder.pokemonImage)
         holder.pokemonText.text = nameList[position].replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
         val zeroes = "0".repeat(4 - (position+1).toString().length)
