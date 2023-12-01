@@ -1,8 +1,11 @@
 package com.example.pokedexapp
 
+import RecyclerItemClickListener
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +17,6 @@ import java.util.LinkedList
 class MainActivity : AppCompatActivity() {
     private lateinit var urlList: MutableList<String>
     private lateinit var nameList: MutableList<String>
-    private lateinit var imageList: MutableList<String>
     private lateinit var typeList: MutableList<String>
     private lateinit var rvPokemon: RecyclerView
     private var count = 0
@@ -24,28 +26,31 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         urlList = mutableListOf()
         nameList = mutableListOf()
-        imageList = mutableListOf()
         typeList = mutableListOf()
         rvPokemon = findViewById(R.id.pokedexRecyclerView)
 
-        var pokemonAdapter = PokemonAdapter(urlList, nameList, typeList, imageList)
+        var pokemonAdapter = PokemonAdapter(urlList, nameList, typeList)
         rvPokemon.adapter = pokemonAdapter
-        rvPokemon.layoutManager = LinearLayoutManager(this@MainActivity)
+        rvPokemon.layoutManager = object : LinearLayoutManager(this@MainActivity) {
+            override fun canScrollVertically(): Boolean {
+                return findLastCompletelyVisibleItemPosition() < itemCount - 1
+            }
+        }
         val dividerItemDecoration = DividerItemDecoration(rvPokemon.context, LinearLayoutManager.VERTICAL)
         rvPokemon.addItemDecoration(dividerItemDecoration)
 
         getPokemonInfo(object : PokemonInfoCallback {
-            override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, images: MutableList<String>, types: MutableList<String>) {
+            override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {
                 urlList = urls
                 nameList = names
-                imageList = images
                 typeList = types
-                pokemonAdapter.updateData(urlList, nameList, imageList, typeList)
-                // THIINK ABOUT TEMPORARY ARRAYS SO THAT THE RECYCLERVIEW DOESNT HAVE TO UPDATE DATA THATS ALREADY BEEN MADE
+                pokemonAdapter.updateData(urlList, nameList, typeList)
             }
             override fun onFailure(error: String) {
             }
         })
+
+
     }
         private fun getPokemonInfo(callback: PokemonInfoCallback) {
             val urlInput = "https://pokeapi.co/api/v2/pokemon/?limit=1017"
@@ -79,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         val i = queue.removeFirst()
         val urlInput = "https://pokeapi.co/api/v2/pokemon/${i+1}"
         urlList.add(urlInput)
-        imageList.add("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i+1}.png")
         client[urlInput, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JsonHttpResponseHandler.JSON) {
                 var name = json.jsonObject.getString("name").replaceFirstChar{it.uppercase()}
@@ -93,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                     typeList[typeList.size-1] += "|" + pokeJson.getJSONArray("types").getJSONObject(1).getJSONObject("type").getString("name").replaceFirstChar{it.uppercase()}
                 }
                 if (count == 10) {
-                    callback.onSuccess(urlList, nameList, imageList, typeList)
+                    callback.onSuccess(urlList, nameList, typeList)
                     count = 0
                 }
                 processQueue(queue, client, callback)
@@ -113,6 +117,6 @@ class MainActivity : AppCompatActivity() {
 }
 
 interface PokemonInfoCallback {
-    fun onSuccess(urls : MutableList<String>, names: MutableList<String>, images: MutableList<String>, types: MutableList<String>)
+    fun onSuccess(urls : MutableList<String>, names: MutableList<String>, types: MutableList<String>)
     fun onFailure(error: String)
 }

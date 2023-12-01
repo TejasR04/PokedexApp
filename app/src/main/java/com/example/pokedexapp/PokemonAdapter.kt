@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
-class PokemonAdapter (private var urlList : List<String>, private var nameList: List<String>, private var imageList: List<String>, private var typeList: List<String>): RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
+class PokemonAdapter (private var urlList : List<String>, private var nameList: List<String>, private var typeList: List<String>): RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val pokemonImage: ImageView
         val pokemonText: TextView
@@ -31,9 +31,8 @@ class PokemonAdapter (private var urlList : List<String>, private var nameList: 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("image issues", imageList[position])
         Glide.with(holder.itemView)
-            .load(imageList[position])
+            .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${position+1}.png")
             .diskCacheStrategy(DiskCacheStrategy.NONE)  // Don't use disk caching
             .into(holder.pokemonImage)
         holder.pokemonText.text = nameList[position].replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
@@ -43,12 +42,11 @@ class PokemonAdapter (private var urlList : List<String>, private var nameList: 
     }
 
     override fun getItemCount(): Int {
-        return imageList.size
+        return nameList.size
     }
-    fun updateData(newURLList: MutableList<String>, newNameList: MutableList<String>, newImageList: MutableList<String>, newTypeList: MutableList<String>) {
+    fun updateData(newURLList: MutableList<String>, newNameList: MutableList<String>, newTypeList: MutableList<String>) {
         urlList = newURLList
         nameList = newNameList
-        imageList = newImageList
         typeList = newTypeList
         notifyDataSetChanged()
     }
