@@ -1,5 +1,6 @@
 package com.example.pokedexapp
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -33,12 +34,20 @@ class PokemonAdapter (private var urlList : List<String>, private var nameList: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Glide.with(holder.itemView)
             .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${position+1}.png")
-            .diskCacheStrategy(DiskCacheStrategy.NONE)  // Don't use disk caching
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(holder.pokemonImage)
         holder.pokemonText.text = nameList[position].replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
         val zeroes = "0".repeat(4 - (position+1).toString().length)
         holder.pokedexNumber.text = "No." + zeroes +  (position+1).toString()
         holder.pokemonType.text = typeList[position].replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        Log.d("PokemonAdapter", nameList.size.toString())
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, PokemonInfoActivity::class.java)
+            intent.putExtra("url", urlList[position])
+            intent.putExtra("name", nameList[position])
+            intent.putExtra("type", typeList[position])
+            it.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
