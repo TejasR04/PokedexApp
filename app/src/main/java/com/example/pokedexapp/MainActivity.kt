@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 nameList.add(name)
                 val pokeJson = json.jsonObject
-                typeList.add(pokeJson.getJSONArray("types").getJSONObject(0).getJSONObject("type").getString("name"))
+                typeList.add(pokeJson.getJSONArray("types").getJSONObject(0).getJSONObject("type").getString("name").replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
                 if (pokeJson.getJSONArray("types").length() > 1) {
                     typeList[typeList.size-1] += "|" + pokeJson.getJSONArray("types").getJSONObject(1).getJSONObject("type").getString("name").replaceFirstChar{it.uppercase()}
                 }

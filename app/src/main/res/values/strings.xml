@@ -5,4 +5,7 @@
     <string name="title_string">Pokedex App</string>
     <string name="type_string">Type</string>
     <string name="species_string">Species</string>
+    <string name="pokemon_string">Pokemon</string>
+    <string name="pokedex_string">No. ????</string>
+    <string name="types_string">Types</string>
 </resources>

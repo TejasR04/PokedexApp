@@ -39,7 +39,7 @@ class PokemonAdapter (private var urlList : List<String>, private var nameList: 
         holder.pokemonText.text = nameList[position].replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
         val zeroes = "0".repeat(4 - (position+1).toString().length)
         holder.pokedexNumber.text = "No." + zeroes +  (position+1).toString()
-        holder.pokemonType.text = typeList[position].replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        holder.pokemonType.text = typeList[position]
         Log.d("PokemonAdapter", nameList.size.toString())
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, PokemonInfoActivity::class.java)
