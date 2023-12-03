@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#2139BD"/> <!-- Change the color to what you want -->
+    <corners android:radius="25dp"/> <!-- This makes the shape a pill -->
+</shape>
