@@ -13,12 +13,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.bumptech.glide.Glide
+import com.codepath.asynchttpclient.AsyncHttpClient
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import okhttp3.Headers
+import org.json.JSONArray
 
 
 class PokemonInfoActivity : AppCompatActivity() {
-    private lateinit var url: String
-    private lateinit var name: String
-    private lateinit var types: String
+    private lateinit var url : String
+    private lateinit var name : String
+    private lateinit var types : String
+    private lateinit var abilityMap : MutableMap<String, String>
+    private lateinit var dexEntry : String
+    private lateinit var evolutionMap : MutableMap<String, String>
+    private var evolutionUrl : String = ""
+    private var height: Int = 0
+    private var weight: Int = 0
     private lateinit var pokemonName : TextView
     private lateinit var pokedexNumber : TextView
     private lateinit var pokemonImage : ImageView
@@ -232,6 +242,128 @@ class PokemonInfoActivity : AppCompatActivity() {
         } else {
             pokemonType1.text = types
         }
+        getBasicInfo(url, object : PokemonInfoCallback {
+            override fun onSuccess(evoDict : MutableMap<String, String>) {}
+            override fun onSuccess(evoUrl : String, entry : String) {}
+            override fun onSuccess(abilities: MutableMap<String, String>, h: Int, w: Int) {
+                abilityMap = abilities
+                height = h
+                weight = w
+                Log.d("basic info", abilities.toString())
+            }
+            override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {}
+            override fun onFailure(error: String) {
+            }
+        })
+        getSpecificInfo(url, object : PokemonInfoCallback {
+            override fun onSuccess(evoDict : MutableMap<String, String>) {}
+            override fun onSuccess(evoUrl : String, entry : String) {
+                evolutionUrl = evoUrl
+                dexEntry = entry
+                Log.d("specific info", evolutionUrl)
+                Log.d("pokedex entry", dexEntry)
+                getEvolutionInfo(evolutionUrl, object : PokemonInfoCallback {
+                    override fun onSuccess(evoDict : MutableMap<String, String>) {
+                        evolutionMap = evoDict
+                        Log.d("evolution info", evolutionMap.toString())
+                    }
+                    override fun onSuccess(evoUrl : String, entry : String) {}
+                    override fun onSuccess(abilities: MutableMap<String, String>, h: Int, w: Int) {}
+                    override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {}
+                    override fun onFailure(error: String) {
+                    }
+                })
+            }
+            override fun onSuccess(abilities: MutableMap<String, String>, h: Int, w: Int) {}
+            override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {}
+            override fun onFailure(error: String) {
+            }
+        })
+    }
 
+    private fun getBasicInfo(urlInput: String, callback: PokemonInfoCallback) {
+        val client = AsyncHttpClient()
+        client[urlInput, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JsonHttpResponseHandler.JSON) {
+                val abilityJson = json.jsonObject.getJSONArray("abilities")
+                val abilities = mutableMapOf<String, String>()
+                for (i in 0 until abilityJson.length()) {
+                    abilities[abilityJson.getJSONObject(i).getJSONObject("ability").getString("name")] =
+                        abilityJson.getJSONObject(i).getJSONObject("ability").getString("url")
+                }
+                val height = json.jsonObject.getInt("height")
+                val weight = json.jsonObject.getInt("weight")
+                callback.onSuccess(abilities, height, weight)
+            }
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                errorResponse: String,
+                throwable: Throwable?
+            ) {
+                Log.d("Pokemon Error", errorResponse)
+                callback.onFailure(errorResponse)
+            }
+        }]
+    }
+
+    private fun getSpecificInfo(url: String, callback: PokemonInfoCallback) {
+        val urlInput = url.substring(0, url.indexOf("pokemon") + 7) + "-species" + url.substring(url.indexOf("pokemon") + 7, url.length)
+        Log.d("checkURL", urlInput)
+        val client = AsyncHttpClient()
+        client[urlInput, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JsonHttpResponseHandler.JSON) {
+                val evolutionUrl = json.jsonObject.getJSONObject("evolution_chain").getString("url")
+                val entryJson = json.jsonObject.getJSONArray("flavor_text_entries")
+                val entry = entryJson.getJSONObject(0).getString("flavor_text")
+                callback.onSuccess(evolutionUrl, entry)
+            }
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                errorResponse: String,
+                throwable: Throwable?
+            ) {
+                Log.d("Pokemon Error", errorResponse)
+                callback.onFailure(errorResponse)
+            }
+        }]
+    }
+
+    private fun getEvolutionInfo(url : String, callback : PokemonInfoCallback) {
+        val client = AsyncHttpClient()
+        client[url, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JsonHttpResponseHandler.JSON) {
+                val chain = json.jsonObject.getJSONObject("chain")
+                val evoDict = mutableMapOf<String, String>()
+                val initialSpecies = chain.getJSONObject("species")
+                evoDict[initialSpecies.getString("name")] = initialSpecies.getString("url")
+                val evoJson = chain.getJSONArray("evolves_to")
+                if (evoJson.length() > 0) {
+                    getEvolutions(evoJson, evoDict)
+                }
+                callback.onSuccess(evoDict)
+            }
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                errorResponse: String,
+                throwable: Throwable?
+            ) {
+                Log.d("Pokemon Error", errorResponse)
+                callback.onFailure(errorResponse)
+            }
+        }]
+    }
+    private var count = 0
+    fun getEvolutions(evoJson: JSONArray, evoDict: MutableMap<String, String>) {
+        for (i in 0 until evoJson.length()) {
+            val speciesJson = evoJson.getJSONObject(i).getJSONObject("species")
+            evoDict[speciesJson.getString("name")] = speciesJson.getString("url")
+
+            if (evoJson.getJSONObject(i).has("evolves_to")) {
+                getEvolutions(evoJson.getJSONObject(i).getJSONArray("evolves_to"), evoDict)
+            }
+        }
     }
 }

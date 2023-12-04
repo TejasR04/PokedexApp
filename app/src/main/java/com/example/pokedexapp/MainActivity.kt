@@ -36,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         rvPokemon.addItemDecoration(dividerItemDecoration)
 
         getPokemonInfo(object : PokemonInfoCallback {
+            override fun onSuccess(evoDict: MutableMap<String, String>) {}
+            override fun onSuccess(evoUrl: String, dexEntry: String) {}
+            override fun onSuccess(abilities: MutableMap<String, String>, height: Int, weight: Int) {}
             override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {
                 urlList = urls
                 nameList = names
@@ -45,7 +48,6 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(error: String) {
             }
         })
-
     }
         private fun getPokemonInfo(callback: PokemonInfoCallback) {
             val urlInput = "https://pokeapi.co/api/v2/pokemon/?limit=1017"
@@ -109,6 +111,9 @@ class MainActivity : AppCompatActivity() {
 }
 
 interface PokemonInfoCallback {
+    fun onSuccess(evoDict : MutableMap<String, String>)
+    fun onSuccess(evoUrl : String, dexEntry : String)
     fun onSuccess(urls : MutableList<String>, names: MutableList<String>, types: MutableList<String>)
+    fun onSuccess(abilities : MutableMap<String, String>, height : Int, weight : Int)
     fun onFailure(error: String)
 }
