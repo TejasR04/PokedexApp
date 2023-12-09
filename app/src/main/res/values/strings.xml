@@ -10,4 +10,8 @@
     <string name="types_string">Types</string>
     <string name="type_1_string">Type</string>
     <string name="type_2_string">Type</string>
+    <string name="dex_entry_text">Entry</string>
+    <string name="ability_string">Abilities</string>
+    <string name="height_string">Height</string>
+    <string name="weight_string">Weight</string>
 </resources>

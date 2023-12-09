@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         getPokemonInfo(object : PokemonInfoCallback {
             override fun onSuccess(evoDict: MutableMap<String, String>) {}
-            override fun onSuccess(evoUrl: String, dexEntry: String) {}
+            override fun onSuccess(evoUrl: String, dexEntry: String, species: String) {}
             override fun onSuccess(abilities: MutableMap<String, String>, height: Int, weight: Int) {}
             override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {
                 urlList = urls
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
 interface PokemonInfoCallback {
     fun onSuccess(evoDict : MutableMap<String, String>)
-    fun onSuccess(evoUrl : String, dexEntry : String)
+    fun onSuccess(evoUrl : String, dexEntry : String, species : String)
     fun onSuccess(urls : MutableList<String>, names: MutableList<String>, types: MutableList<String>)
     fun onSuccess(abilities : MutableMap<String, String>, height : Int, weight : Int)
     fun onFailure(error: String)

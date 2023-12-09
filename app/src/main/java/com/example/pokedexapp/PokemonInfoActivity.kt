@@ -36,6 +36,11 @@ class PokemonInfoActivity : AppCompatActivity() {
     private lateinit var pokemonType2 : TextView
     private lateinit var shinyButton : Button
     private lateinit var frame : FrameLayout
+    private lateinit var dexText : TextView
+    private lateinit var abilityText : TextView
+    private lateinit var speciesText : TextView
+    private lateinit var heightText : TextView
+    private lateinit var weightText : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +48,17 @@ class PokemonInfoActivity : AppCompatActivity() {
         url = intent.getStringExtra("url").toString()
         name = intent.getStringExtra("name").toString()
         types = intent.getStringExtra("type").toString()
-        Log.d("PokemonInfoActivity", url)
         pokemonName = findViewById(R.id.pokemonName)
         pokemonName.text = name
         pokedexNumber = findViewById(R.id.pokedexNumber)
         val zeroes = "0".repeat(4 - (url.substring(34, url.length)).length)
         pokedexNumber.text = "No." + zeroes + (url.substring(34, url.length))
         pokemonImage = findViewById(R.id.pokemonPicture)
+        dexText = findViewById(R.id.dexEntry)
+        abilityText = findViewById(R.id.abilities)
+        speciesText = findViewById(R.id.species)
+        heightText = findViewById(R.id.height)
+        weightText = findViewById(R.id.weight)
         Glide.with(this)
             .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${url.substring(34, url.length)}.png")
             .into(pokemonImage)
@@ -150,7 +159,6 @@ class PokemonInfoActivity : AppCompatActivity() {
                 frame.backgroundTintList = ColorStateList.valueOf(color)
             }
         }
-        Log.d("color", color.toString())
         if (types.contains("|")) {
             pokemonType1.text = types.substring(0, types.indexOf("|"))
             pokemonType2 = findViewById(R.id.type2)
@@ -163,7 +171,6 @@ class PokemonInfoActivity : AppCompatActivity() {
             frame.visibility = View.VISIBLE
             types = types.substring(types.indexOf("|") + 1, types.length)
             pokemonType2.text = types
-            Log.d("secondtype", types)
             when (types) {
                 "Normal" -> {
                     color = Color.parseColor("#A8A77A")
@@ -238,18 +245,29 @@ class PokemonInfoActivity : AppCompatActivity() {
                     frame.backgroundTintList = ColorStateList.valueOf(color)
                 }
             }
-            Log.d("color2", color.toString())
         } else {
             pokemonType1.text = types
         }
         getBasicInfo(url, object : PokemonInfoCallback {
             override fun onSuccess(evoDict : MutableMap<String, String>) {}
-            override fun onSuccess(evoUrl : String, entry : String) {}
+            override fun onSuccess(evoUrl : String, entry : String, species : String) {}
             override fun onSuccess(abilities: MutableMap<String, String>, h: Int, w: Int) {
                 abilityMap = abilities
                 height = h
                 weight = w
-                Log.d("basic info", abilities.toString())
+                Log.d("abilities", abilityMap.toString())
+                val abilityString = StringBuilder()
+                var count = 0
+                for (ability in abilityMap.keys) {
+                    abilityString.append(ability.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                    count++
+                    if (count != abilityMap.size) {
+                        abilityString.append(" | ")
+                    }
+                }
+                abilityText.text = abilityString
+                heightText.text = (height/10.0).toString() + " m"
+                weightText.text = (weight/10.0).toString() + " kg"
             }
             override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {}
             override fun onFailure(error: String) {
@@ -257,22 +275,21 @@ class PokemonInfoActivity : AppCompatActivity() {
         })
         getSpecificInfo(url, object : PokemonInfoCallback {
             override fun onSuccess(evoDict : MutableMap<String, String>) {}
-            override fun onSuccess(evoUrl : String, entry : String) {
+            override fun onSuccess(evoUrl : String, entry : String, species : String) {
                 evolutionUrl = evoUrl
                 dexEntry = entry
-                Log.d("specific info", evolutionUrl)
-                Log.d("pokedex entry", dexEntry)
                 getEvolutionInfo(evolutionUrl, object : PokemonInfoCallback {
                     override fun onSuccess(evoDict : MutableMap<String, String>) {
                         evolutionMap = evoDict
-                        Log.d("evolution info", evolutionMap.toString())
                     }
-                    override fun onSuccess(evoUrl : String, entry : String) {}
+                    override fun onSuccess(evoUrl : String, entry : String, species : String) {}
                     override fun onSuccess(abilities: MutableMap<String, String>, h: Int, w: Int) {}
                     override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {}
                     override fun onFailure(error: String) {
                     }
                 })
+                dexText.text = dexEntry
+                speciesText.text = species
             }
             override fun onSuccess(abilities: MutableMap<String, String>, h: Int, w: Int) {}
             override fun onSuccess(urls: MutableList<String>, names: MutableList<String>, types: MutableList<String>) {}
@@ -309,14 +326,33 @@ class PokemonInfoActivity : AppCompatActivity() {
 
     private fun getSpecificInfo(url: String, callback: PokemonInfoCallback) {
         val urlInput = url.substring(0, url.indexOf("pokemon") + 7) + "-species" + url.substring(url.indexOf("pokemon") + 7, url.length)
-        Log.d("checkURL", urlInput)
         val client = AsyncHttpClient()
         client[urlInput, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JsonHttpResponseHandler.JSON) {
                 val evolutionUrl = json.jsonObject.getJSONObject("evolution_chain").getString("url")
                 val entryJson = json.jsonObject.getJSONArray("flavor_text_entries")
-                val entry = entryJson.getJSONObject(0).getString("flavor_text")
-                callback.onSuccess(evolutionUrl, entry)
+                var entry : String = ""
+                for (i in 0 until entryJson.length()) {
+                    if (i > entryJson.length()) {
+                        break
+                    }
+                    if (entryJson.getJSONObject(i).getJSONObject("language").getString("name") == "en") {
+                        entry = entryJson.getJSONObject(i).getString("flavor_text").replace("\n", " ")
+                        break
+                    }
+                }
+                val species = json.jsonObject.getJSONArray("genera")
+                var speciesEntry : String = ""
+                for (i in 0 until species.length()) {
+                    if (i > species.length()) {
+                        break
+                    }
+                    if (species.getJSONObject(i).getJSONObject("language").getString("name") == "en") {
+                        speciesEntry = species.getJSONObject(i).getString("genus")
+                        break
+                    }
+                }
+                callback.onSuccess(evolutionUrl, entry, speciesEntry)
             }
             override fun onFailure(
                 statusCode: Int,
@@ -355,7 +391,6 @@ class PokemonInfoActivity : AppCompatActivity() {
             }
         }]
     }
-    private var count = 0
     fun getEvolutions(evoJson: JSONArray, evoDict: MutableMap<String, String>) {
         for (i in 0 until evoJson.length()) {
             val speciesJson = evoJson.getJSONObject(i).getJSONObject("species")

@@ -30,12 +30,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.1" />
 
+    <View
+        android:id="@+id/pictureBox2"
+        android:layout_width="385dp"
+        android:layout_height="228dp"
+        android:background="#b2cfff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.626" />
+
     <TextView
         android:id="@+id/pokemonName"
         android:layout_width="241dp"
         android:layout_height="26dp"
         android:text="@string/pokemon_name_string"
         android:textAlignment="center"
+        android:fontFamily="@font/press_start_2p"
         android:textSize="14sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pokedex_string"
+        android:fontFamily="@font/press_start_2p"
         android:textSize="10sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -74,6 +87,7 @@
         android:layout_width="89sp"
         android:layout_height="28dp"
         android:text="Shiny"
+        android:fontFamily="@font/press_start_2p"
         android:textSize="8sp"
         android:backgroundTint="#3280ff"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -109,6 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="13dp"
             android:text="@string/type_1_string"
+            android:fontFamily="@font/press_start_2p"
             android:textColor="@color/white"
             android:layout_gravity="center"
             tools:ignore="TextContrastCheck" />
@@ -135,7 +150,76 @@
             android:layout_height="13dp"
             android:layout_gravity="center"
             android:text="@string/type_2_string"
+            android:fontFamily="@font/press_start_2p"
             android:textColor="@color/white" />
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/abilities"
+        android:layout_width="394dp"
+        android:layout_height="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/ability_string"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.451" />
+
+    <TextView
+        android:id="@+id/species"
+        android:layout_width="322dp"
+        android:layout_height="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/species_string"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
+
+    <TextView
+        android:id="@+id/dexEntry"
+        android:layout_width="342dp"
+        android:layout_height="117dp"
+        android:gravity="center_horizontal"
+        android:text="@string/dex_entry_text"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.614" />
+
+    <TextView
+        android:id="@+id/height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/height_string"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.709" />
+
+    <TextView
+        android:id="@+id/weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weight_string"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.892"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.709" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
